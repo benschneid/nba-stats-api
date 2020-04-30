@@ -7,15 +7,14 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import and_
 from nba_api.stats.endpoints import leaguegamelog, boxscoretraditionalv2, commonplayerinfo
 from datetime import datetime
-from models import Base, BaseProd, LeagueGameLog, Player, PlayerBoxStage, TeamSeasonReg as tsr, TeamSeasonPost as tsp,\
-    PlayerSeasonReg as psr, PlayerSeasonPost as psp, CleanTeamBoxStage, CleanPlayerBoxStage
+from models import TeamSeasonReg as tsr, TeamSeasonPost as tsp, PlayerSeasonReg as psr, PlayerSeasonPost as psp
+from models import *
+from constants import *
 import time
-from collections import OrderedDict
 
 default_args = {
     "owner": "airflow",
-    "start_date": datetime(1969, 10, 1),
-    "end_date": datetime(2017, 6, 30),
+    "start_date": datetime(1946, 11, 1),
     "retries": 0,
 }
 
@@ -46,6 +45,12 @@ def games_request(season_string, bb_date, season_type):
     return leaguegamelog.LeagueGameLog(season=season_string, date_from_nullable=bb_date,
                                        date_to_nullable=bb_date,
                                        season_type_all_star=season_type).get_dict()['resultSets'][0]['rowSet']
+
+
+def insert_data(data, tables):
+    insert_content = str(data)[1:-1].replace("[", "(").replace("]", ")").replace("None", "Null").replace('"', "'")
+    for table in tables:
+        conn.execute("INSERT INTO {} VALUES ".format(table) + insert_content + " ON CONFLICT DO NOTHING")
 
 
 def stage_game_logs(**kwargs):
@@ -84,21 +89,14 @@ def stage_player_boxes(**kwargs):
                 if type(item) == str:
                     if "'" in item:
                         stats[m][n] = item.replace("'", "''")
-        insert_content = str(stats)[1:-1].replace("[", "(").replace("]", ")").replace("None", "Null").replace('"', "'")
-        conn.execute("INSERT INTO stage.player_box VALUES " + insert_content + " ON CONFLICT DO NOTHING")
-
-
-player_cols = OrderedDict({'PERSON_ID': 0, 'DISPLAY_FIRST_LAST': 3, 'DOB': 6, 'COUNTRY': 8, 'HEIGHT': 10, 'WEIGHT': 11,
-                           'SEASON_EXP': 12, 'FROM_YEAR': 22, 'TO_YEAR': 23, 'DRAFT_YEAR': 27, 'DRAFT_ROUND': 28,
-                           'DRAFT_NUMBER': 29, 'SCHOOL': 7, 'POSITION': 14})
+        insert_data(stats, ["stage.player_box"])
 
 
 def insert_new_players(**kwargs):
     date_format_str = '%Y-%m-%d'
     date = kwargs['ds']
-    game_ids_tuple = [i[0] for i in session.query(LeagueGameLog.GAME_ID.distinct()).filter(
-        LeagueGameLog.GAME_DATE == date).all()]
-    staged_player_box_tuple = session.query(PlayerBoxStage.PLAYER_ID).filter(PlayerBoxStage.GAME_ID.in_(game_ids_tuple)).all()
+    staged_player_box_tuple = session.query(PlayerBoxStage.PLAYER_ID).join(
+        LeagueGameLog.__table__).filter(LeagueGameLog.GAME_DATE == date).all()
     staged_players = [player[0] for player in staged_player_box_tuple]
     for player in staged_players:
         if not session.query(Player.PLAYER_ID).filter(Player.PLAYER_ID == player).first():
@@ -121,12 +119,8 @@ def insert_new_players(**kwargs):
                 if type(item) == str:
                     if "'" in item:
                         limited_content[n] = item.replace("'", "''")
-            insert_content = str(limited_content).replace("[", "(").replace("]", ")").replace("None", "Null").replace('"',"'")
-            conn.execute("INSERT INTO prod.players VALUES " + insert_content + " ON CONFLICT DO NOTHING")
+            insert_data(limited_content, ["prod.players"])
             time.sleep(4)
-
-
-game_cols = OrderedDict({'GAME_ID': 4, 'SEASON': 0, 'GAME_DATE': 5, 'PLAYOFFS': -1})
 
 
 def insert_games(**kwargs):
@@ -141,15 +135,8 @@ def insert_games(**kwargs):
             i[0] = str(year) + '-' + str(year + 1)[-2:]
             i[5] = datetime.strptime(i[5], date_format_str).strftime('%Y-%m-%d %H:%M:%S')
 
-        games = [[league_game_logs[n][value] for key, value in game_cols.items()] for n, i in enumerate(league_game_logs)]
-        insert_content = str(games[0::2])[1:-1].replace("[", "(").replace("]", ")").replace("None", "Null").replace('"', "'")
-        conn.execute("INSERT INTO prod.games VALUES " + insert_content + " ON CONFLICT DO NOTHING")
-
-
-team_box_cols = OrderedDict({'MIN': 8, 'FGM': 9, 'FGA': 10, 'FG_PCT': 11, 'FG3M': 12, 'FG3A': 13, 'FG3_PCT': 14,
-                             'FTM': 15, 'FTA': 16, 'FT_PCT': 17, 'OREB': 18, 'DREB': 19, 'REB': 20, 'AST': 21,
-                             'STL': 22, 'BLK': 23, 'TOV': 24, 'PF': 25, 'PTS': 26, 'PLUS_MINUS': 27, 'TEAM_ID': 1,
-                             'GAME_ID': 4, 'HOME': 6, 'WIN': 7, 'OPPONENT_TEAM_ID': -1})
+        games = [[league_game_logs[n][value] for key, value in game_cols.items()] for n, i in enumerate(league_game_logs)][0::2]
+        insert_data(games, ["prod.games"])
 
 
 def insert_team_box(**kwargs):
@@ -166,22 +153,13 @@ def insert_team_box(**kwargs):
             i[6] = False if '@' in i[6] else True
             i[7] = True if i[7] == 'W' else False
         team_boxes = [[league_game_logs[n][value] for key, value in team_box_cols.items()] for n, i in enumerate(league_game_logs)]
-        insert_content = str(team_boxes)[1:-1].replace("[", "(").replace("]", ")").replace("None", "Null").replace('"', "'")
-        conn.execute("INSERT INTO prod.team_box VALUES " + insert_content + " ON CONFLICT DO NOTHING")
-        conn.execute("INSERT INTO stage.team_box_clean VALUES " + insert_content)
-
-
-player_box_cols = OrderedDict({'MIN': 8, 'FGM': 9, 'FGA': 10, 'FG_PCT': 11, 'FG3M': 12, 'FG3A': 13, 'FG3_PCT': 14,
-                               'FTM': 15, 'FTA': 16, 'FT_PCT': 17, 'OREB': 18, 'DREB': 19, 'REB': 20, 'AST': 21,
-                               'STL': 22, 'BLK': 23, 'TOV': 24, 'PF': 25, 'PTS': 26, 'PLUS_MINUS': 27, 'GAME_ID': 0,
-                               'TEAM_ID': 1, 'PLAYER_ID': 4, 'STARTED': 6})
+        insert_data(team_boxes, ["prod.team_box", "stage.team_box_clean"])
 
 
 def insert_player_box(**kwargs):
     date = kwargs['ds']
-    game_ids_tuple = [i[0] for i in session.query(LeagueGameLog.GAME_ID.distinct()).filter(
-        LeagueGameLog.GAME_DATE == date).all()]
-    player_boxes_stage = session.query(PlayerBoxStage.__table__).filter(PlayerBoxStage.GAME_ID.in_(game_ids_tuple)).all()
+    player_boxes_stage = session.query(PlayerBoxStage.__table__).join(
+        LeagueGameLog.__table__).filter(LeagueGameLog.GAME_DATE == date).all()
     if player_boxes_stage:
         for n, i in enumerate(player_boxes_stage):
             player_boxes_stage[n] = list(i)
@@ -193,21 +171,13 @@ def insert_player_box(**kwargs):
                 i[8] = 0
             i[6] = True if i[6] not in ['', ' '] else False
         player_boxes = [[player_boxes_stage[n][value] for key, value in player_box_cols.items()] for n, i in enumerate(player_boxes_stage)]
-        insert_content = str(player_boxes)[1:-1].replace("[", "(").replace("]", ")").replace("None", "Null").replace('"', "'")
-        conn.execute("INSERT INTO prod.player_box VALUES " + insert_content + " ON CONFLICT DO NOTHING")
-        conn.execute("INSERT INTO stage.player_box_clean VALUES " + insert_content)
-
-
-player_season_totals = ['MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB',
-                        'DREB', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'PLUS_MINUS', 'SEASON_ID', 'TEAM_ID',
-                        'PLAYER_ID', 'GAMES', 'GAMES_STARTED']
+        insert_data(player_boxes, ["prod.player_box", "stage.player_box_clean"])
 
 
 def add_season_totals_player(**kwargs):
     date = kwargs['ds']
-    game_ids_tuple = [i[0] for i in session.query(LeagueGameLog.GAME_ID.distinct()).filter(
-        LeagueGameLog.GAME_DATE == date).all()]
-    player_boxes = session.query(CleanPlayerBoxStage.__table__).filter(CleanPlayerBoxStage.GAME_ID.in_(game_ids_tuple)).all()
+    player_boxes = session.query(CleanPlayerBoxStage.__table__).join(
+        LeagueGameLog.__table__).filter(LeagueGameLog.GAME_DATE == date).all()
     for n, i in enumerate(player_boxes):
         player_boxes[n] = list(i)
     for player_box in player_boxes:
@@ -261,18 +231,10 @@ def add_season_totals_player(**kwargs):
                                                        model.TEAM_ID == active_season_team[-4])).values(insert_dict))
 
 
-team_season_totals = ['MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB',
-                      'DREB', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'PLUS_MINUS', 'OPPT_FGM', 'OPPT_FGA',
-                      'OPPT_FG_PCT', 'OPPT_FG3M', 'OPPT_FG3A', 'OPPT_FG3_PCT', 'OPPT_FTM', 'OPPT_FTA', 'OPPT_FT_PCT',
-                      'OPPT_OREB', 'OPPT_DREB', 'OPPT_REB', 'OPPT_AST', 'OPPT_STL', 'OPPT_BLK', 'OPPT_TOV', 'OPPT_PF',
-                      'OPPT_PTS', 'TEAM_ID', 'SEASON_ID', 'GAMES', 'WINS', 'LOSSES']
-
-
 def add_season_totals_team(**kwargs):
     date = kwargs['ds']
-    game_ids_tuple = [i[0] for i in session.query(LeagueGameLog.GAME_ID.distinct()).filter(
-        LeagueGameLog.GAME_DATE == date).all()]
-    team_boxes = session.query(CleanTeamBoxStage.__table__).filter(CleanTeamBoxStage.GAME_ID.in_(game_ids_tuple)).all()
+    team_boxes = session.query(CleanTeamBoxStage.__table__).join(
+        LeagueGameLog.__table__).filter(LeagueGameLog.GAME_DATE == date).all()
     for n, i in enumerate(team_boxes):
         team_boxes[n] = list(i)
     for team_box in team_boxes:

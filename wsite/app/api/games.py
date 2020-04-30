@@ -17,5 +17,8 @@ def get_player(player_id):
 def team_box(game_id):
     return jsonify({
             'Headers': PlayerBoxProd.__table__.columns.keys(),
-            'Data': db.session.query(PlayerBoxProd.__table__, Teams.__table__).join(Teams.__table__).filter(PlayerBoxProd.GAME_ID == game_id).all()
+            'Data': db.session.query(
+                PlayerBoxProd.__table__, Teams.NAME).join(
+                Teams.__table__).filter(PlayerBoxProd.GAME_ID == game_id).order_by(Teams.NAME).all()
         })
+
