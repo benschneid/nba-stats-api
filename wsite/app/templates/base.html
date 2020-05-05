@@ -12,11 +12,14 @@
         {{super()}}
         <style>
         .lelbron {
-        width: 35px;
-        height: 35px;
+        width: 28px;
+        height: 40px;
         }
         .navbar-brand{
-        padding: 7.5px;
+        padding: 0px;
+        padding-top: 4.5px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
         }
         .dropdown:hover>.dropdown-menu {
         display: block;
@@ -83,7 +86,7 @@
                 <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand">
-                  <img class= "lelbron" alt="Brand" src="https://i.kym-cdn.com/entries/icons/original/000/011/061/lelbron.PNG">
+                  <img class= "lelbron" alt="Brand" src="/static/favicon/barkley.png" title="Sir Charles Barkley!">
               </a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -125,7 +128,7 @@
         <script src="{{url_for('static', filename='menu.js')}}"></script>
         <script type="text/javascript">
             autocomplete(document.getElementById("myInput"), {{players|tojson}},
-             {{from_years|tojson}}, {{to_years|tojson}});
+             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}});
         </script>
         {{ super() }}
     {% endblock %}

@@ -1,4 +1,4 @@
-function autocomplete(inp, arr, from_years, to_years) {
+function autocomplete(inp, arr, from_years, to_years, ids) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
   var currentFocus;
@@ -24,6 +24,7 @@ function autocomplete(inp, arr, from_years, to_years) {
             if (arr[i].substr(ind, val.length).toUpperCase() == val.toUpperCase()) {
               /*create a DIV element for each matching element:*/
               b = document.createElement("DIV");
+              b.href = "/api/players/" + ids[i]
               /*make the matching letters bold:*/
               b.innerHTML = arr[i].substr(0, ind);
               b.innerHTML += "<strong>" + arr[i].substr(ind, val.length) + "</strong>";
@@ -43,6 +44,7 @@ function autocomplete(inp, arr, from_years, to_years) {
                   /*close the list of autocompleted values,
                   (or any other open lists of autocompleted values:*/
                   closeAllLists();
+                  window.location = this.href;
               });
               a.appendChild(b);
             }
