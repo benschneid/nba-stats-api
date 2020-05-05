@@ -1,21 +1,76 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}
-    This is an example page
+{% block head %}
+{{super()}}
+    <link rel="shortcut icon" type="image/png" href="/static/favicon/favicon.ico">
+
+    {% block title %}
+        {{ title }} | Barkley Analytics
+    {% endblock %}
+
+    {% block styles %}
+        {{super()}}
+        <style>
+        .lelbron {
+        width: 35px;
+        height: 35px;
+        }
+        .navbar-brand{
+        padding: 7.5px;
+        }
+        .dropdown:hover>.dropdown-menu {
+        display: block;
+        }
+        .form-control{
+        max-width: 200px;
+        }
+        .dropdown{
+        width: 250px;
+        }
+        .navbar-right{
+        margin-left: 0px;
+        }
+
+        /*the container must be positioned relative:*/
+        .autocomplete {
+          position: relative;
+          display: inline-block;
+        }
+        .autocomplete-items {
+          position: absolute;
+          border: 1px solid #d4d4d4;
+          border-bottom: none;
+          border-top: none;
+          z-index: 99;
+          /*position the autocomplete items to be the same width as the container:*/
+          top: 100%;
+          left: 0;
+          right: 0;
+        }
+        .autocomplete-items div {
+          padding: 10px;
+          cursor: pointer;
+          background-color: #fff;
+          border-bottom: 1px solid #d4d4d4;
+        }
+        /*when hovering an item:*/
+        .autocomplete-items div:hover {
+          background-color: #e9e9e9;
+        }
+        /*when navigating through the items using the arrow keys:*/
+        .autocomplete-active {
+          background-color: DodgerBlue !important;
+          color: #ffffff;
+        }
+        .autocomplete-items
+        {
+           max-height: 410px;
+           overflow: auto;
+        }
+        </style>
+    {% endblock %}
 {% endblock %}
 
-{% block styles %}
-    {{super()}}
-    <style>
-    .lelbron {
-    width: 35px;
-    height: 35px;
-    }
-    .navbar-brand{
-    padding: 7.5px;
-    }
-    </style>
-{% endblock %}
 
 {% block body %}
     {% block navbar %}
@@ -23,85 +78,57 @@
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".collapse" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">
+              <a class="navbar-brand">
                   <img class= "lelbron" alt="Brand" src="https://i.kym-cdn.com/entries/icons/original/000/011/061/lelbron.PNG">
               </a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li><a href="#">Link <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Link</a></li>
+                <li><a href="{{ url_for('main.index') }}">Home<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">About</a></li>
+                <li><a class="api" href="#">API</a></li>
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Play Index<span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Player Game Finder</a></li>
+                    <li><a href="#">Player Season Finder</a></li>
+                    <li><a href="#">Player Comparison Finder</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">Team Game Finder</a></li>
+                    <li><a href="#">Team Season Finder</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="#">One more separated link</a></li>
+                    <li><a href="#">Head2Head Finder</a></li>
                   </ul>
                 </li>
-              </ul>
-              <form class="navbar-form navbar-left">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-              </form>
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Link</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                  </ul>
-                </li>
+                <ul class="nav navbar-form navbar-right">
+                    <form autocomplete="off" action="/action_page.php">
+                      <div class="autocomplete">
+                        <input id="myInput" type="text" name="myCountry" placeholder="Search Player">
+                      </div>
+                    </form>
+                </ul>
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
     {% endblock %}
     {% block content %}
-        <h1 style="padding-top: 50px;">Hello, Bootstrap</h1>
+        <h1 style="padding-top: 30px;">Hello, Bootstrap</h1>
         <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
-        <h1>Hello, Bootstrap</h1>
+    {% endblock %}
+    {% block scripts %}
+        <script src="{{url_for('static', filename='menu.js')}}"></script>
+        <script type="text/javascript">
+            autocomplete(document.getElementById("myInput"), {{players|tojson}});
+        </script>
+        {{ super() }}
     {% endblock %}
 {% endblock %}
 

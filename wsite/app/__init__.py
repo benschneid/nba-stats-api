@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 db = SQLAlchemy()
 bootstrap = Bootstrap()
+from app.models import *
 
 
 def create_app(config_class=Config):
@@ -15,5 +16,16 @@ def create_app(config_class=Config):
     app.register_blueprint(main_bp)
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
+    #
+    # @app.route('/', defaults={'path': ''})
+    # @app.route('/<path:path>')
+    # def catch_all(path):
+    #     return 'You want path: %s' % path
+
+    @app.context_processor
+    def context_processor():
+        players = [player[0] for player in db.session.query(Player.NAME).all()]
+        return dict(players=players)
+
     return app
 
