@@ -21,12 +21,6 @@
         .dropdown:hover>.dropdown-menu {
         display: block;
         }
-        .form-control{
-        max-width: 200px;
-        }
-        .dropdown{
-        width: 250px;
-        }
         .navbar-right{
         margin-left: 0px;
         }
@@ -66,6 +60,10 @@
         {
            max-height: 410px;
            overflow: auto;
+           width: 300px;
+        }
+        input[type=text] {
+        width: 300px;
         }
         </style>
     {% endblock %}
@@ -126,7 +124,8 @@
     {% block scripts %}
         <script src="{{url_for('static', filename='menu.js')}}"></script>
         <script type="text/javascript">
-            autocomplete(document.getElementById("myInput"), {{players|tojson}});
+            autocomplete(document.getElementById("myInput"), {{players|tojson}},
+             {{from_years|tojson}}, {{to_years|tojson}});
         </script>
         {{ super() }}
     {% endblock %}

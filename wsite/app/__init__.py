@@ -24,8 +24,11 @@ def create_app(config_class=Config):
 
     @app.context_processor
     def context_processor():
-        players = [player[0] for player in db.session.query(Player.NAME).all()]
-        return dict(players=players)
+        player_data = db.session.query(Player.NAME, Player.FROM_YEAR, Player.TO_YEAR).all()
+        players = [player[0] for player in player_data]
+        from_years = [player[1] for player in player_data]
+        to_years = [player[2] for player in player_data]
+        return dict(players=players, from_years=from_years, to_years=to_years)
 
     return app
 
