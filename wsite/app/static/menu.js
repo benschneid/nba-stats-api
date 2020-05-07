@@ -24,7 +24,7 @@ function autocomplete(inp, arr, from_years, to_years, ids) {
             if (arr[i].substr(ind, val.length).toUpperCase() == val.toUpperCase()) {
               /*create a DIV element for each matching element:*/
               b = document.createElement("DIV");
-              b.href = "/api/players/" + ids[i]
+              b.href = "/players/" + ids[i]
               /*make the matching letters bold:*/
               b.innerHTML = arr[i].substr(0, ind);
               b.innerHTML += "<strong>" + arr[i].substr(ind, val.length) + "</strong>";
