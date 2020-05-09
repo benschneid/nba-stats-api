@@ -33,7 +33,8 @@ def player_page(player_id):
                     if n == 0:
                         row[i] = row[i] / row[2]
                     else:
-                        row[i] = row[i] / row[4] * 36 * 60
+                        if row[4] != 0:
+                            row[i] = row[i] / row[4] * 36 * 60
         for table in [player_data, player_data_pergame, player_data_per36]:
             for row in table:
                 row[4] = round(row[4]/60, 1)
@@ -53,4 +54,3 @@ def player_page(player_id):
     for i in [7,10,13,len(headers)-1]:
         headers[i] = headers[i].replace("_", " ")
     return render_template('player_page.html', title=name + ' Stats', headers=headers, data_dict=data_dict, name=name)
-

@@ -1,21 +1,13 @@
 {% extends "base.html" %}
 
-    {% block content %}
-
-    {% endblock %}
-
-    {% block scripts %}
-        <script src="{{url_for('static', filename='menu.js')}}"></script>
-        <script type="text/javascript">
-            autocomplete(document.getElementById("myInput"), {{players|tojson}},
-             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}});
-        </script>
-        <h1 style="padding-top: 30px; margin-left: 30px; font-family: verdana;">{{name}} Career Stats</h1>
-        {% for key, value in data_dict.items() %}
-        <script src="{{url_for('static', filename='table.js')}}"></script>
-        <h1 style="padding-top: 30px; padding-bottom: 0px; margin-left: 30px; font-size: 20px;">{{key}}</h1>
-        <script type="text/javascript">
-        generate_table({{value|tojson}}, {{headers|tojson}});
-        </script>
-        {% endfor %}
-    {% endblock %}
+{% block scripts %}
+    {{super()}}
+    <h1 style="padding-top: 30px; margin-left: 30px; font-family: verdana;">{{name}} Career Stats</h1>
+    {% for key, value in data_dict.items() %}
+    <script src="{{url_for('static', filename='table.js')}}"></script>
+    <h1 style="padding-top: 30px; padding-bottom: 0px; margin-left: 30px; font-size: 20px;">{{key}}</h1>
+    <script type="text/javascript">
+    generate_table({{value|tojson}}, {{headers|tojson}});
+    </script>
+    {% endfor %}
+{% endblock %}
