@@ -73,7 +73,7 @@ def league_game_log(season, playoffs, date_from, date_to):
         .filter(Games.SEASON_ID == season,
                 Games.PLAYOFFS == bool(playoffs),
                 date_from <= Games.GAME_DATE, Games.GAME_DATE <= date_to,
-                Oppt_Teams.TEAM_ID == TeamBox.OPPONENT_TEAM_ID).order_by(Games.GAME_ID, TeamBox.HOME,).all()
+                Oppt_Teams.TEAM_ID == TeamBox.OPPONENT_TEAM_ID).order_by(Games.GAME_ID, TeamBox.HOME).all()
     return jsonify({
         'Headers': headers,
         'Data': list(games)})

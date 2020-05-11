@@ -3,8 +3,6 @@ from app.models import *
 from flask import jsonify
 from app import db
 from app.api import bp
-from sqlalchemy.orm import aliased
-from datetime import datetime
 
 
 @bp.route('/players/<int:player_id>', methods=['GET'])
