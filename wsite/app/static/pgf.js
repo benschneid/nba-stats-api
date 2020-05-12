@@ -54,28 +54,26 @@ function dropdowns() {
             }
       }
   }
-   var teams = {'ATL': 1610612737, 'BKN': 1610612751, 'BOS': 1610612738, 'CHA': 1610612766, 'CHI': 1610612741,
-                'CLE': 1610612739, 'DAL': 1610612742, 'DEN': 1610612743, 'DET': 1610612765, 'GSW': 1610612744,
-                'HOU': 1610612745, 'IND': 1610612754, 'LAC': 1610612746, 'LAL': 1610612747, 'MEM': 1610612763,
-                'MIA': 1610612748, 'MIL': 1610612749, 'MIN': 1610612750, 'NOP': 1610612740, 'NYK': 1610612752,
-                'OKC': 1610612760, 'ORL': 1610612753, 'PHI': 1610612755, 'PHX': 1610612756, 'POR': 1610612757,
-                'SAC': 1610612758, 'SAS': 1610612759, 'TOR': 1610612761, 'UTA': 1610612762, 'WAS': 1610612764};
+   var teams = {'ATL': 'ATL', 'BKN': 'BKN', 'BOS': 'BOS', 'CHA': 'CHA', 'CHI': 'CHI', 'CLE': 'CLE', 'DAL': 'DAL',
+                'DEN': 'DEN', 'DET': 'DET', 'GSW': 'GSW', 'HOU': 'HOU', 'IND': 'IND', 'LAC': 'LAC', 'LAL': 'LAL', 'MEM': 'MEM',
+                'MIA': 'MIA', 'MIL': 'MIL', 'MIN': 'MIN', 'NOP': 'NOP', 'NYK': 'NYK', 'OKC': 'OKC', 'ORL': 'ORL', 'PHI': 'PHI',
+                'PHX': 'PHX', 'POR': 'POR', 'SAC': 'SAC', 'SAS': 'SAS', 'TOR': 'TOR', 'UTA': 'UTA', 'WAS': 'WAS'};
 
-   var single_dropdowns = {"Game Month": {"October": 10, "November": 11, "December": 12, "January": 1,
+   var single_dropdowns = {"Game_Month": {"October": 10, "November": 11, "December": 12, "January": 1,
                                      "February": 2, "March": 3, "April": 4, "May": 5, "June": 6},
                            "Team": sorting(teams), "Opponent": sorting(teams)};
   for(var key in single_dropdowns){
       var fieldset = document.createElement("FIELDSET");
       flex2.appendChild(fieldset)
       var fieldset_legend = document.createElement("LEGEND");
-      fieldset_legend.innerHTML = key;
+      fieldset_legend.innerHTML = key.split("_").join(" ");
       fieldset.appendChild(fieldset_legend);
       var dropdown = document.createElement("SELECT");
       dropdown.setAttribute("name", key);
       fieldset.appendChild(dropdown);
       dropdown.style.width = "40%";
       a_item = document.createElement("OPTION");
-      a_item.innerHTML = (key == "Game Month") ? "All Months": "All Teams";
+      a_item.innerHTML = (key == "Game_Month") ? "All Months": "All Teams";
       a_item.setAttribute("value", "Any");
       dropdown.appendChild(a_item);
       for(subkey in single_dropdowns[key]){
@@ -124,7 +122,7 @@ function dropdowns() {
   }
   droppies = {"stats": ['MIN', 'FGM', 'FGA', 'FG PCT', 'FG3M', 'FG3A', 'FG3 PCT', 'FTM', 'FTA', 'FT PCT', 'OREB',
                'DREB', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS'],
-               "operators": ["<=", "="]};
+               "operators": ["<="]};
   var fieldset = document.createElement("FIELDSET");
   flex4.appendChild(fieldset);
   var fieldset_legend = document.createElement("LEGEND");
@@ -141,13 +139,13 @@ function dropdowns() {
         dropdown.style.width = (key == "stats") ? "30%": "20%";
         a_item = document.createElement("OPTION");
         a_item.innerHTML = (key == "stats") ? "Choose":">="
-        a_item.setAttribute("value", (key == "stats") ? "Any":">=");
+        a_item.setAttribute("value", (key == "stats") ? "Any":"gt");
         dropdown.appendChild(a_item);
         for(var subkey in droppies[key]){
             a_item = document.createElement("OPTION");
             dropdown.appendChild(a_item);
             a_item.innerHTML = droppies[key][subkey];
-            a_item.setAttribute("value", droppies[key][subkey]);
+            a_item.setAttribute("value", (key == "stats") ? droppies[key][subkey]: "lt");
             }
       }
       var input = document.createElement("INPUT");
@@ -189,7 +187,7 @@ function dropdowns() {
   fieldset.appendChild(submit);
   body.appendChild(form);
   document.getElementById('theform').onsubmit = function(){
-    window.location = '/pgf/find?' + $(document.getElementById('theform')).serialize();
+    window.location = '/pgf/find?' + $(document.getElementById('theform')).serialize() + "&page=1";
     return false;
   };
 

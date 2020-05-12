@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{super()}}
+    <style>
+    .search{
+    margin-left: 30px;
+    margin-bottom: 30px;
+    font-size: 17px;
+    background-color: lightgrey;
+    padding: 15px;
+    border: 2px black;
+    width: 75%
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 style = "margin-left: 30px; padding-top: 30px;"> Player Game Finder </h1>
+    <h4 style = "margin-left: 30px; font-size: 15px;">Full regular season and playoff game logs (all stats)
+        available for the 1983-84 through 2018-2019 seasons.</h4>
+    <h4 style = "margin-left: 30px; margin-bottom: 30px; font-size: 15px;">Partial regular season and playoff game logs (FG, FT, FTA, and PTS) available
+        for the 1946-47 through 1982-83 seasons.</h4>
+
+<div class="search"><strong>{{search_text}}</strong></div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    {% if data_dict|length == 0 %}
+        <h4 style = "margin-left: 30px; margin-bottom: 30px; font-size: 15px;">Sorry, there are no results for your search.</h4>
+    {% endif %}
+    <script src="{{url_for('static', filename='table.js')}}"></script>
+    <script type="text/javascript">
+    generate_table({{data_dict|tojson}}, {{headers|tojson}}, {{col}});
+    </script>
+{% endblock %}
