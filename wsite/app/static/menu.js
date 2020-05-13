@@ -12,7 +12,12 @@ function autocomplete(inp, arr, from_years, to_years, ids) {
       /*create a DIV element that will contain the items (values):*/
       a = document.createElement("DIV");
       a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
+      if(inp.name == "myCountry"){
+        a.setAttribute("class", "autocomplete-items");
+      }
+      else{
+        a.setAttribute("class", "autocomplete-items h2h");
+      }
       /*append the DIV element as a child of the autocomplete container:*/
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
@@ -24,7 +29,9 @@ function autocomplete(inp, arr, from_years, to_years, ids) {
             if (arr[i].substr(ind, val.length).toUpperCase() == val.toUpperCase()) {
               /*create a DIV element for each matching element:*/
               b = document.createElement("DIV");
-              b.href = "/players/" + ids[i]
+              if(inp.name == "myCountry"){
+                b.href = "/players/" + ids[i];
+              }
               /*make the matching letters bold:*/
               b.innerHTML = arr[i].substr(0, ind);
               b.innerHTML += "<strong>" + arr[i].substr(ind, val.length) + "</strong>";
@@ -44,7 +51,35 @@ function autocomplete(inp, arr, from_years, to_years, ids) {
                   /*close the list of autocompleted values,
                   (or any other open lists of autocompleted values:*/
                   closeAllLists();
-                  window.location = this.href;
+                  if(this.href){
+                    window.location = this.href;
+                  }
+                  else{
+                    current_display =
+                    inp.style.display = "none";
+                    parent = inp.parentNode;
+                    selected = document.createElement("H5");
+                    selected.style.display = "inline";
+                    selected.innerHTML = "Selected: "+ "<strong>"+ inp.value +"</strong>";
+                    parent.appendChild(selected);
+                    bb = document.createElement("A");
+                    bb.innerHTML = "X";
+                    bb.style.display = "inline";
+                    bb.style.paddingLeft = "4px";
+                    bb.style.paddingRight = "4px";
+                    bb.style.float = "right";
+                    bb.style.backgroundColor = "red";
+                    bb.style.color = "white";
+                    bb.style.margin = "1px";
+                    parent.appendChild(bb);
+                    bb.addEventListener("click", function(f) {
+                        bb.style.display = "none";
+                        selected.style.display = "none";
+                        inp.style.display = "initial";
+                    });
+
+
+                  }
               });
               a.appendChild(b);
             }

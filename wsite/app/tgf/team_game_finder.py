@@ -29,12 +29,12 @@ def finder():
         query_args[arg] = request.args.get(arg)
     mode = query_args["mode"]
     if mode == "Single":
-        headers = ["Rk", "Date", "Tm", "Opp", "W/L", 'MIN'] + ['PTS', 'FG', "FGA", "FG_PCT", 'FG3M', 'FG3A', 'FG3_PCT',
-                                                               'FT', 'FTA', 'FT_PCT', 'REB', 'AST', 'STL', 'BLK', 'TOV'] + \
+        headers = ["Rk", "Date", "Tm", "Opp", "W/L", 'MIN'] + ['PTS', 'FGM', "FGA", "FG_PCT", 'FG3M', 'FG3A', 'FG3_PCT',
+                                                               'FTM', 'FTA', 'FT_PCT', 'REB', 'AST', 'STL', 'BLK'] + \
                   ['OPPT_PTS', 'OPPT_FG', "OPPT_FGA", "OPPT_FG_PCT", 'OPPT_FG3M', 'OPPT_FG3A', 'OPPT_FG3_PCT',
-                   'OPPT_FT', 'OPPT_FTA', 'OPPT_FT_PCT', 'OPPT_REB', 'OPPT_AST', 'OPPT_STL', 'OPPT_BLK', 'OPPT_TOV']
+                   'OPPT_FT', 'OPPT_FTA', 'OPPT_FT_PCT', 'OPPT_REB', 'OPPT_AST', 'OPPT_STL', 'OPPT_BLK']
         cols = ['MIN', 'PTS', "FGM", "FGA", "FG_PCT", "FG3M", "FG3A", "FG3_PCT", "FTM", "FTA", "FT_PCT", 'REB',
-                'AST', 'STL', 'BLK', 'TOV']
+                'AST', 'STL', 'BLK']
         data = [Games.GAME_DATE, Teams.NAME, Oppt_Teams.NAME, TeamBox.WIN] + \
                [getattr(TeamBox, col) for col in cols] + [getattr(Oppt_Box, col) for col in cols[1:]]
         team_data = db.session.query(*data).join(Oppt_Box.__table__, and_(TeamBox.GAME_ID == Oppt_Box.GAME_ID,

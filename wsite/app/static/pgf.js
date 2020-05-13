@@ -31,12 +31,6 @@ function dropdowns() {
       descript.style.marginLeft = "5px";
 
   }
-
-
-
-
-
-
   var superflex = document.createElement("DIV");
   superflex.style.marginBottom = "30px";
   var flex = document.createElement("DIV");

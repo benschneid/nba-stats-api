@@ -20,6 +20,8 @@ def create_app(config_class=Config):
     app.register_blueprint(pgf_bp, url_prefix='/pgf')
     from app.tgf import bp as tgf_bp
     app.register_blueprint(tgf_bp, url_prefix='/tgf')
+    from app.h2h import bp as h2h_bp
+    app.register_blueprint(h2h_bp, url_prefix='/h2h')
     #
     # @app.route('/', defaults={'path': ''})
     # @app.route('/<path:path>')

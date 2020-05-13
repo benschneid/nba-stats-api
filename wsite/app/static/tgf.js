@@ -151,9 +151,9 @@ function dropdowns() {
      }
   }
   droppies = {"stats": ['MIN', 'FGM', 'FGA', 'FG PCT', 'FG3M', 'FG3A', 'FG3 PCT', 'FTM', 'FTA', 'FT PCT',
-                'REB', 'AST', 'STL', 'BLK', 'TOV', 'PTS', 'OPPT FGM', 'OPPT FGA', 'OPPT FG PCT',
+                'REB', 'AST', 'STL', 'BLK', 'PTS', 'OPPT FGM', 'OPPT FGA', 'OPPT FG PCT',
                 'OPPT FG3M', 'OPPT FG3A', 'OPPT FG3 PCT', 'OPPT FTM', 'OPPT FTA', 'OPPT FT PCT',
-                'OPPT REB', 'OPPT AST', 'OPPT STL', 'OPPT BLK', 'OPPT TOV', 'OPPT PTS' ],
+                'OPPT REB', 'OPPT AST', 'OPPT STL', 'OPPT BLK', 'OPPT PTS' ],
                "operators": ["<="]};
   var fieldset = document.createElement("FIELDSET");
   flex4.appendChild(fieldset);

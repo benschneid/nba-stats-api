@@ -97,13 +97,13 @@ function superHeader(tblBody){
     cell.style.padding = "2px";
     cell.style.textAlign = "center";
     row.appendChild(cell);
-    cell.setAttribute("colspan", "15");
+    cell.setAttribute("colspan", "14");
     var cell = document.createElement("td");
     var cellText = document.createTextNode("Opponent");
     cell.appendChild(cellText);
     cell.style.padding = "2px";
     cell.style.textAlign = "center";
     row.appendChild(cell);
-    cell.setAttribute("colspan", "15");
+    cell.setAttribute("colspan", "14");
     tblBody.appendChild(row);
 }

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{super()}}
+    <style>
+    input[class=h2h]{
+    width: 90%;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    }
+    input[type=submit]{
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    }
+    .scrub{
+    margin-top: 50px;
+    }
+    .flex-container {
+    display: flex;
+    flex-direction: row;
+    width: 700px;
+    margin-left: 30px;
+    justify-content: space-between;
+    }
+    h5{
+    margin-left: 10px;
+    }
+    fieldset{
+    width: 40%;
+    border: 1px solid black;
+    }
+    legend{
+    padding: 0 0 0 5px;
+    float: left;
+    width: 100%;
+    margin: 0 0 10px 0;
+    background: lightgray;
+    }
+    .autocomplete-items.h2h{
+    max-height: 410px;
+    overflow: auto;
+    width: 300px;
+    margin-left: 10px;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 style = "margin-left: 30px; padding-top: 30px;"> Head2Head Finder </h1>
+    <h4 style = "margin-left: 30px; font-size: 15px;">Full regular season and playoff game logs (all stats)
+        available for the 1983-84 through 2018-2019 seasons.</h4>
+    <h4 style = "margin-left: 30px; margin-bottom: 30px; font-size: 15px;">Partial regular season and playoff game logs (FG, FT, FTA, and PTS) available
+        for the 1946-47 through 1982-83 seasons.</h4>
+    <form autocomplete="off" action="/h2h/find">
+        <div class="flex-container">
+        <fieldset class="field">
+            <legend>Player 1</legend>
+            <h5>Type name to select an option</h5>
+            <div class="autocomplete">
+                <input class="h2h" id="player1" type="text" name="player1" placeholder="Search Player">
+            </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Player 2</legend>
+          <h5>Type name to select an option</h5>
+          <div class="autocomplete">
+                <input class="h2h" id="player2" type="text" name="player2" placeholder="Search Player">
+          </div>
+        </fieldset>
+        <div class="scrub">
+            <input type="submit" value="Get Results">
+        </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+        <script src="{{url_for('static', filename='menu.js')}}"></script>
+        <script type="text/javascript">
+            autocomplete(document.getElementById("player1"), {{players|tojson}},
+             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}});
+            autocomplete(document.getElementById("player2"), {{players|tojson}},
+             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}});
+        </script>
+{% endblock %}
