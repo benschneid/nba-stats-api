@@ -18,6 +18,8 @@ def create_app(config_class=Config):
     app.register_blueprint(api_bp, url_prefix='/api')
     from app.pgf import bp as pgf_bp
     app.register_blueprint(pgf_bp, url_prefix='/pgf')
+    from app.tgf import bp as tgf_bp
+    app.register_blueprint(tgf_bp, url_prefix='/tgf')
     #
     # @app.route('/', defaults={'path': ''})
     # @app.route('/<path:path>')

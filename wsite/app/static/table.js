@@ -7,8 +7,11 @@ function generate_table(data, headers, order) {
   var tblBody = document.createElement("tbody");
 
   // creating header row
+  if(headers[1] != "Player" && headers[2] != "Count"){
+    superHeader(tblBody);
+  }
   if(data.length > 0){
-    createHeader(headers,tblBody)
+    createHeader(headers,tblBody);
     }
 
   // creating all cells
@@ -34,7 +37,7 @@ function generate_table(data, headers, order) {
         if(j == order){
             cell.style.backgroundColor = "orange";
         }
-        if(j == 1){
+        if(j == 1 && headers[1] == "Player"){
             var cellText = document.createElement("A");
             cellText.innerHTML = data[i][j];
             cellText.setAttribute("href", "/players/" + data[i][data[i].length-1].toString());
@@ -75,4 +78,32 @@ function createHeader(headers,tblBody){
     row.appendChild(cell);
   }
   tblBody.appendChild(row);
+}
+
+function superHeader(tblBody){
+    var row = document.createElement("tr");
+    row.style.backgroundColor = "#D3D3D3";
+    row.style.fontWeight = "bold";
+    var cell = document.createElement("td");
+    var cellText = document.createTextNode(" ");
+    cell.appendChild(cellText);
+    cell.style.padding = "2px";
+    cell.style.textAlign = "center";
+    row.appendChild(cell);
+    cell.setAttribute("colspan", "6");
+    var cell = document.createElement("td");
+    var cellText = document.createTextNode("Team");
+    cell.appendChild(cellText);
+    cell.style.padding = "2px";
+    cell.style.textAlign = "center";
+    row.appendChild(cell);
+    cell.setAttribute("colspan", "15");
+    var cell = document.createElement("td");
+    var cellText = document.createTextNode("Opponent");
+    cell.appendChild(cellText);
+    cell.style.padding = "2px";
+    cell.style.textAlign = "center";
+    row.appendChild(cell);
+    cell.setAttribute("colspan", "15");
+    tblBody.appendChild(row);
 }

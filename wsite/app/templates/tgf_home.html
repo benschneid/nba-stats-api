@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{super()}}
+    <style>
+    .parameter{
+       min-width: 0px;
+       max-height: 410px;
+       overflow: auto;
+       width: 100px;
+    }
+    .flex-container.superflex{
+      display: flex;
+      flex-direction: row;
+      margin: auto;
+      width: 95%;
+    }
+    .flex-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    fieldset{
+        border: 1px solid black;
+        width: 100%;
+        min-height: 130px;
+    }
+    legend{
+    padding: 0 0 0 5px;
+    float: left;
+    width: 100%;
+    margin: 0 0 10px 0;
+    background: lightgray;
+    }
+    select{
+    margin: 10px;
+    display: inline-block;
+    }
+    .to_season{
+    display: inline-block;
+    color: black;
+    }
+    .fielddiv{
+    display: inline;
+    }
+    .additional_div{
+    display: inline;
+    }
+    .additional_input{
+    width: 20% !important;
+    }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 style = "margin-left: 30px; padding-top: 30px;"> Team Game Finder </h1>
+    <h4 style = "margin-left: 30px; font-size: 15px;">Full regular season and playoff game logs (all stats)
+        available for the 1983-84 through 2018-2019 seasons.</h4>
+    <h4 style = "margin-left: 30px; margin-bottom: 30px; font-size: 15px;">Partial regular season and playoff game logs (FG, FT, FTA, and PTS) available
+        for the 1946-47 through 1982-83 seasons.</h4>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    <script src="{{url_for('static', filename='tgf.js')}}"></script>
+    <script type="text/javascript">
+    dropdowns();
+    </script>
+
+{% endblock %}
