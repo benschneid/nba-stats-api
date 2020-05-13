@@ -2,7 +2,43 @@ function dropdowns() {
   var body = document.getElementsByTagName("body")[0];
   var form = document.createElement("FORM");
   form.setAttribute("id", "theform")
+  modes = ["Single", "Total"];
+  text = ["Search for <strong>single games</strong> matching criteria",
+          "Search for <strong>total games</strong> matching criteria"];
+  for(val in modes){
+      var d = document.createElement("DIV");
+      var dropdown = document.createElement("INPUT");
+      d.appendChild(dropdown);
+      d.style.padding = "10px";
+      d.style.backgroundColor = "lightgrey";
+      d.style.width = "auto";
+      d.style.margin = "0px 5px 30px 30px";
+      d.style.display = "inline-block";
+      form.appendChild(d);
+      dropdown.setAttribute("name", "mode");
+      dropdown.setAttribute("type", "radio");
+      dropdown.setAttribute("value", modes[val]);
+      dropdown.setAttribute("id", modes[val]);
+      dropdown.style.display = "inline";
+      if(modes[val] == "Single"){
+        dropdown.setAttribute("checked", "checked");
+        }
+      var descript = document.createElement("LABEL");
+      d.appendChild(descript);
+      descript.setAttribute("for", modes[val]);
+      descript.innerHTML = text[val];
+      descript.style.display = "inline";
+      descript.style.marginLeft = "5px";
+
+  }
+
+
+
+
+
+
   var superflex = document.createElement("DIV");
+  superflex.style.marginBottom = "30px";
   var flex = document.createElement("DIV");
   var flex2 = document.createElement("DIV");
   var flex3 = document.createElement("DIV");
@@ -17,7 +53,7 @@ function dropdowns() {
   superflex.appendChild(flex2);
   superflex.appendChild(flex3);
   superflex.appendChild(flex4);
-  var seas_age = {'Seasons': [1946, 2020], 'Age': [18, 50]}
+  var seas_age = {'Seasons': [1946, 2019], 'Age': [18, 50]}
   for(var key in seas_age){
       var fieldset = document.createElement("FIELDSET");
       flex.appendChild(fieldset)
@@ -165,9 +201,21 @@ function dropdowns() {
   a_item.style.marginBottom = "0px";
   a_item.style.padding = "10px";
   a_item.style.color = "black";
+  b_item = document.createElement("A");
+  b_item.setAttribute("class", "dynamic Total");
+  b_item.innerHTML = "<strong>" + " Total Occurrences" + "</strong>";
+  b_item.style.pointerEvents = "none";
+  b_item.style.width = "25%";
+  b_item.style.margin = "10px";
+  b_item.style.marginBottom = "0px";
+  b_item.style.padding = "10px";
+  b_item.style.color = "black";
   fieldset.appendChild(a_item);
+  fieldset.appendChild(b_item);
+  b_item.style.display = "none";
   var dropdown = document.createElement("SELECT");
   dropdown.setAttribute("name", "order");
+  dropdown.setAttribute("class", " dynamic Single");
   fieldset.appendChild(dropdown);
   for(var subkey in droppies["stats"]){
     a_item = document.createElement("OPTION");
@@ -190,6 +238,13 @@ function dropdowns() {
     window.location = '/pgf/find?' + $(document.getElementById('theform')).serialize() + "&page=1";
     return false;
   };
+
+   $(function(){
+       $("input[name=mode]").click(function(){
+          $(".dynamic").not("."+this.value).hide();
+          $("."+this.value).show();
+       });
+   });
 
 }
 

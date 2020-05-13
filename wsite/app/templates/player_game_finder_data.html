@@ -35,4 +35,9 @@
     <script type="text/javascript">
     generate_table({{data_dict|tojson}}, {{headers|tojson}}, {{col}});
     </script>
+    <script src="{{url_for('static', filename='button_nav.js')}}"></script>
+    <script type="text/javascript">
+    buttons({{has_prev|tojson}}, {{has_next|tojson}}, {{page|tojson}});
+    </script>
+
 {% endblock %}

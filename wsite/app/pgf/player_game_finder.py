@@ -22,18 +22,26 @@ def finder():
     Oppt_Teams = aliased(Teams)
     dfs = '%Y-%m-%d %H:%M:%S'
     query_args = {}
-    for arg in ["Seasons0", "Seasons1", "Age0", "Age1", "Game_Month", "Team", "Opponent", "Game_Result",
+    for arg in ["mode", "Seasons0", "Seasons1", "Age0", "Age1", "Game_Month", "Team", "Opponent", "Game_Result",
                 "Role", "Game_Location", "stats0", "stats1", "stats2", "stats3", "operators0", "operators1",
                 "operators2", "operators3", "input0", "input1", "input2", "input3", "order", "page"]:
         query_args[arg] = request.args.get(arg)
-    headers = ["Rank", "Player", "Date", "Team", "Opponent", "W/L", "GS"] + PlayerBoxProd.__table__.columns.keys()[:-4]
-    data = [Player.NAME, Games.GAME_DATE, Teams.NAME, Oppt_Teams.NAME, TeamBox.WIN, PlayerBoxProd.STARTED] + \
-           [getattr(PlayerBoxProd, col) for col in headers[7:]] + [PlayerBoxProd.PLAYER_ID]
-    player_data = db.session.query(*data).join \
-        (Player.__table__).join(Games.__table__, PlayerBoxProd.GAME_ID == Games.GAME_ID).join \
-        (TeamBox.__table__, and_(Games.GAME_ID == TeamBox.GAME_ID, PlayerBoxProd.TEAM_ID == TeamBox.TEAM_ID)).join \
-        (Teams.__table__, PlayerBoxProd.TEAM_ID == Teams.TEAM_ID)
-    search_text = "Current search: In a single game"
+    mode = query_args["mode"]
+    if mode == "Single":
+        headers = ["Rank", "Player", "Date", "Team", "Opponent", "W/L", "GS"] + PlayerBoxProd.__table__.columns.keys()[:-4]
+        data = [Player.NAME, Games.GAME_DATE, Teams.NAME, Oppt_Teams.NAME, TeamBox.WIN, PlayerBoxProd.STARTED] + \
+               [getattr(PlayerBoxProd, col) for col in headers[7:]] + [PlayerBoxProd.PLAYER_ID]
+        player_data = db.session.query(*data).join \
+            (Player.__table__).join(Games.__table__, PlayerBoxProd.GAME_ID == Games.GAME_ID).join \
+            (TeamBox.__table__, and_(Games.GAME_ID == TeamBox.GAME_ID, PlayerBoxProd.TEAM_ID == TeamBox.TEAM_ID)).join \
+            (Teams.__table__, PlayerBoxProd.TEAM_ID == Teams.TEAM_ID)
+    else:
+        headers = ["Rank", "Player", "Count"]
+        player_data = db.session.query(Player.NAME, db.func.count(Player.NAME).label('total'), Player.PLAYER_ID).join \
+            (PlayerBoxProd.__table__).join(Games.__table__, PlayerBoxProd.GAME_ID == Games.GAME_ID).join \
+            (TeamBox.__table__, and_(Games.GAME_ID == TeamBox.GAME_ID, PlayerBoxProd.TEAM_ID == TeamBox.TEAM_ID)).join \
+            (Teams.__table__, PlayerBoxProd.TEAM_ID == Teams.TEAM_ID)
+    search_text = "Current search: In a single game" if mode == "Single" else "Current search: In multiple seasons"
     filter_args = [Oppt_Teams.TEAM_ID == TeamBox.OPPONENT_TEAM_ID]
     if query_args["Seasons0"] != "Any":
         filter_args.append(Games.SEASON_ID >= query_args["Seasons0"])
@@ -75,28 +83,39 @@ def finder():
                 filter_args.append(getattr(PlayerBoxProd, query_args["stat" + s]) <= float(query_args["input" + s]))
                 search_text += ", {} <= {}".format(query_args["stats" + s], query_args["input" + s])
     page = int(query_args["page"])
-    query_results = list(player_data.filter(*filter_args).order_by
-                         (nullslast(getattr(PlayerBoxProd, query_args["order"]).desc())).paginate(page=page, per_page=100,
-                                                                                                  error_out=True).items)
-    search_text += ", sorted by {}.".format(query_args["order"])
-    query_results = [list(i) for i in query_results]
-    for n, row in enumerate(query_results):
-        row.insert(0, n+1+(page-1)*100)
-        row[7] = int(row[7] / 60)
-        row[5] = 'W' if row[5] else 'L'
-        row[6] = 1 if row[6] else 0
-        row[2] = datetime.strftime(row[2], '%m-%d-%Y')
+    if mode == "Single":
+        query_results = player_data.filter(*filter_args).order_by\
+            (nullslast(getattr(PlayerBoxProd, query_args["order"]).desc())).paginate\
+            (page=page, per_page=100, error_out=True)
+    else:
+        query_results = player_data.filter(*filter_args).group_by(Player.NAME, Player.PLAYER_ID).order_by\
+            (text('total DESC')).paginate\
+            (page=page, per_page=100, error_out=True)
+    search_text += ", sorted by {}.".format(query_args["order"] if mode == "Single" else "most games matching criteria")
+    query_results_list = [list(i) for i in query_results.items]
+    if mode == "Single":
+        for n, row in enumerate(query_results_list):
+            row.insert(0, n+1+(page-1)*100)
+            row[7] = int(row[7] / 60)
+            row[5] = 'W' if row[5] else 'L'
+            row[6] = 1 if row[6] else 0
+            row[2] = datetime.strftime(row[2], '%m-%d-%Y')
+            for i in [10, 13, 16]:
+                if row[i]:
+                    row[i] = round(row[i], 3)
+            for i in range(len(row)):
+                if row[i] is None:
+                    row[i] = 0
+
         for i in [10, 13, 16]:
-            if row[i]:
-                row[i] = round(row[i], 3)
-        for i in range(len(row)):
-            if row[i] is None:
-                row[i] = 0
-
-    for i in [10, 13, 16]:
-        headers[i] = headers[i].replace("_", " ")
-    headers[len(headers) - 1] = "+/-"
-
+            headers[i] = headers[i].replace("_", " ")
+        headers[len(headers) - 1] = "+/-"
+    else:
+        for n, row in enumerate(query_results_list):
+            row.insert(0, n + 1 + (page - 1) * 100)
+    col = headers.index(query_args["order"]) if mode == "Single" else headers.index("Count")
     return render_template('player_game_finder_data.html', search_text=search_text,
                            title='Player Game Finder', headers=headers,
-                           data_dict=query_results, col=headers.index(query_args["order"]))
+                           data_dict=query_results_list, col=col,
+                           has_prev=query_results.has_prev, has_next=query_results.has_next,
+                           page=page)

@@ -12,11 +12,11 @@ function generate_table(data, headers, order) {
     }
 
   // creating all cells
+  var counter = 0;
   for (var i = 0; i < data.length; i++) {
     // creates a table row
     if(i%25 == 0 && i > 0){
         createHeader(headers, tblBody);
-        continue;
     }
     var row = document.createElement("tr");
     tblBody.appendChild(row);
