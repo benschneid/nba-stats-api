@@ -73,6 +73,9 @@ def finder():
     if query_args["Game_Location"] != "Either":
         filter_args.append(TeamBox.HOME == (True if query_args["Game_Location"] == "Home" else False))
         search_text += ", game played at {}".format(query_args["Game_Location"])
+    if query_args["Game_Type"] != "Either":
+        filter_args.append(Games.PLAYOFFS == (True if query_args["Game_Type"] == "Playoffs" else False))
+        search_text += ", game played at {}".format(query_args["Game_Location"])
     for i in range(4):
         s = str(i)
         if query_args["input"+s] and query_args["stats"+s] != "Any":

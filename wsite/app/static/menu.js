@@ -1,6 +1,10 @@
-function autocomplete(inp, arr, from_years, to_years, ids) {
+function autocomplete(inp, arr, from_years, to_years, ids, parent, selected, bb) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
+  dic = {};
+  for(i in ids){
+    dic[ids[i]] = arr[i];
+  }
   var currentFocus;
   /*execute a function when someone writes in the text field:*/
   inp.addEventListener("input", function(e) {
@@ -43,7 +47,7 @@ function autocomplete(inp, arr, from_years, to_years, ids) {
               years.style.pointerEvents = "none";
               b.appendChild(years);
               /*insert a input field that will hold the current array item's value:*/
-              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              b.innerHTML += "<input type='hidden' value='" + ids[i] + "'>";
               /*execute a function when someone clicks on the item value (DIV element):*/
               b.addEventListener("click", function(e) {
                   /*insert the value for the autocomplete text field:*/
@@ -52,33 +56,20 @@ function autocomplete(inp, arr, from_years, to_years, ids) {
                   (or any other open lists of autocompleted values:*/
                   closeAllLists();
                   if(this.href){
+                    inp.value = "";
                     window.location = this.href;
                   }
                   else{
-                    current_display =
                     inp.style.display = "none";
-                    parent = inp.parentNode;
-                    selected = document.createElement("H5");
                     selected.style.display = "inline";
-                    selected.innerHTML = "Selected: "+ "<strong>"+ inp.value +"</strong>";
-                    parent.appendChild(selected);
-                    bb = document.createElement("A");
-                    bb.innerHTML = "X";
+                    selected.innerHTML = "Selected: "+ "<strong>"+ dic[inp.value] +"</strong>";
                     bb.style.display = "inline";
-                    bb.style.paddingLeft = "4px";
-                    bb.style.paddingRight = "4px";
-                    bb.style.float = "right";
-                    bb.style.backgroundColor = "red";
-                    bb.style.color = "white";
-                    bb.style.margin = "1px";
-                    parent.appendChild(bb);
-                    bb.addEventListener("click", function(f) {
+                    bb.addEventListener("click", function() {
                         bb.style.display = "none";
                         selected.style.display = "none";
                         inp.style.display = "initial";
+                        inp.value=null;
                     });
-
-
                   }
               });
               a.appendChild(b);

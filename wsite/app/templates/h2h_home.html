@@ -43,6 +43,9 @@
     width: 300px;
     margin-left: 10px;
     }
+    .hoverer{
+    cursor: pointer;
+    }
     </style>
 {% endblock %}
 
@@ -52,20 +55,26 @@
         available for the 1983-84 through 2018-2019 seasons.</h4>
     <h4 style = "margin-left: 30px; margin-bottom: 30px; font-size: 15px;">Partial regular season and playoff game logs (FG, FT, FTA, and PTS) available
         for the 1946-47 through 1982-83 seasons.</h4>
-    <form autocomplete="off" action="/h2h/find">
+    <form autocomplete="off" id="form">
         <div class="flex-container">
         <fieldset class="field">
             <legend>Player 1</legend>
             <h5>Type name to select an option</h5>
-            <div class="autocomplete">
+            <div class="autocomplete" id="player1_parent">
                 <input class="h2h" id="player1" type="text" name="player1" placeholder="Search Player">
+                <h5 style="display: none;" id="player1_header"></h5>
+                <a class="hoverer" id="player1_x" style="display: none; padding-left: 4px;
+                 padding-right: 4px; float: right; background-color: red; color: white; margin-left: 5px;">X</a>
             </div>
         </fieldset>
         <fieldset class="field">
           <legend>Player 2</legend>
           <h5>Type name to select an option</h5>
-          <div class="autocomplete">
+          <div class="autocomplete" id="player2_parent">
                 <input class="h2h" id="player2" type="text" name="player2" placeholder="Search Player">
+                <h5 style="display: none;" id="player2_header"></h5>
+                <a class="hoverer" id="player2_x" style="display: none; padding-left: 4px;
+                 padding-right: 4px; float: right; background-color: red; color: white; margin-left: 5px;">X</a>
           </div>
         </fieldset>
         <div class="scrub">
@@ -80,8 +89,14 @@
         <script src="{{url_for('static', filename='menu.js')}}"></script>
         <script type="text/javascript">
             autocomplete(document.getElementById("player1"), {{players|tojson}},
-             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}});
+             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}}, document.getElementById("player1_parent"),
+             document.getElementById("player1_header"), document.getElementById("player1_x"));
             autocomplete(document.getElementById("player2"), {{players|tojson}},
-             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}});
+             {{from_years|tojson}}, {{to_years|tojson}}, {{ids|tojson}}, document.getElementById("player2_parent"),
+             document.getElementById("player2_header"), document.getElementById("player2_x"));
+        </script>
+        <script src="{{url_for('static', filename='h2h.js')}}"></script>
+        <script type="text/javascript">
+            dropdowns();
         </script>
 {% endblock %}

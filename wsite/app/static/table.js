@@ -7,7 +7,7 @@ function generate_table(data, headers, order) {
   var tblBody = document.createElement("tbody");
 
   // creating header row
-  if(headers[1] != "Player" && headers[2] != "Count"){
+  if(headers[1] != "Player" && headers[2] != "Count" && headers[3] != "GS"){
     superHeader(tblBody);
   }
   if(data.length > 0){
@@ -18,7 +18,7 @@ function generate_table(data, headers, order) {
   var counter = 0;
   for (var i = 0; i < data.length; i++) {
     // creates a table row
-    if(i%25 == 0 && i > 0){
+    if(i%10 == 0 && i > 0){
         createHeader(headers, tblBody);
     }
     var row = document.createElement("tr");

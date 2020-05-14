@@ -69,6 +69,9 @@ def finder():
     if query_args["Game_Location"] != "Either":
         filter_args.append(TeamBox.HOME == (True if query_args["Game_Location"] == "Home" else False))
         search_text += ", game played at {}".format(query_args["Game_Location"])
+    if query_args["Game_Type"] != "Either":
+        filter_args.append(Games.PLAYOFFS == (True if query_args["Game_Type"] == "Playoffs" else False))
+        search_text += ", game played at {}".format(query_args["Game_Location"])
     if query_args["Overtime"] != "Either":
         filter_args.append(TeamBox.MIN > 240 if query_args["Overtime"] == "Yes" else TeamBox.MIN <= 240)
         search_text += ", game played at {}".format(query_args["Game_Location"])
