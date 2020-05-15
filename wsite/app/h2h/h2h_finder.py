@@ -25,9 +25,18 @@ def finder():
     player1_name = db.session.query(Player.NAME).filter(Player.PLAYER_ID == player1).first_or_404()[0]
     player2_name = db.session.query(Player.NAME).filter(Player.PLAYER_ID == player2).first_or_404()[0]
     games = [row[0] for row in list(db.session.query(PlayerBoxProd.GAME_ID)
-                                    .filter(or_(PlayerBoxProd.PLAYER_ID == player1, PlayerBoxProd.PLAYER_ID == player2))
+                                    .filter(or_(PlayerBoxProd.PLAYER_ID == player1, PlayerBoxProd.PLAYER_ID == player2),
+                                            PlayerBoxProd.MIN > 0)
                                     .group_by(PlayerBoxProd.GAME_ID)
                                     .having(func.count(PlayerBoxProd.GAME_ID) == 2).all())]
+    same_team = [row[0] for row in list(db.session.query(PlayerBoxProd.GAME_ID)
+                                        .filter(or_(PlayerBoxProd.PLAYER_ID == player1, PlayerBoxProd.PLAYER_ID == player2),
+                                                PlayerBoxProd.MIN > 0)
+                                        .group_by(PlayerBoxProd.GAME_ID, PlayerBoxProd.TEAM_ID)
+                                        .having(func.count(PlayerBoxProd.GAME_ID) == 2).all())]
+    for i in same_team:
+        if i in games:
+            games.remove(i)
     headers = ['Rk', 'Player', 'Date', 'Team'] + PlayerBoxProd.__table__.columns.keys()[:-4]
     data = [Player.NAME, Games.GAME_DATE, Teams.NAME] + [getattr(PlayerBoxProd, i) for i in headers[4:]]
     player_data_reg = list(db.session.query(*data)
@@ -51,7 +60,7 @@ def finder():
         for n, row in enumerate(table):
             row.insert(0, n+1)
             row[2] = datetime.strftime(row[2], '%m-%d-%Y')
-            row[4] = str(int(row[4]/60)) + ':' + str(row[4]%60)
+            row[4] = str(int(row[4]/60)) + ':' + str(row[4] % 60).zfill(2)
     for n, i in enumerate(headers):
         headers[n] = headers[n].replace("_", " ").replace('PCT', '%')
     return render_template('h2h_data.html',

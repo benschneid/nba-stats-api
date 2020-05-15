@@ -18,16 +18,20 @@
     {% if reg_dict|length == 0 and post_dict|length == 0 %}
         <h4 style = "margin-left: 30px; margin-bottom: 30px; font-size: 15px;">Sorry, there are no results for your search.</h4>
     {% else %}
+    {% if reg_dict|length > 0 %}
     <h2 style = "margin-left: 30px; padding-top: 30px;">Regular Season: {{(reg_dict|length/2)|int}} games</h2>
     <script src="{{url_for('static', filename='table.js')}}"></script>
     <script type="text/javascript">
     generate_table({{reg_dict|tojson}}, {{headers|tojson}});
     </script>
+    {% endif %}
+    {% if post_dict|length > 0 %}
     <h2 style = "margin-left: 30px; padding-top: 30px;">Playoffs: {{(post_dict|length/2)|int}} games</h2>
     <script src="{{url_for('static', filename='button_nav.js')}}"></script>
     <script type="text/javascript">
     generate_table({{post_dict|tojson}}, {{headers|tojson}});
     </script>
+    {% endif %}
     {% endif %}
 
 {% endblock %}
