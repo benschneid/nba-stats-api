@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
@@ -27,6 +27,16 @@ def create_app(config_class=Config):
     # @app.route('/<path:path>')
     # def catch_all(path):
     #     return 'You want path: %s' % path
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        # note that we set the 404 status explicitly
+        return render_template('errors/404.html', title="404 Not Found"), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        # note that we set the 404 status explicitly
+        return render_template('errors/500.html', title="500 Internal Server Error"), 500
 
     @app.context_processor
     def context_processor():
