@@ -8,7 +8,7 @@
         }
         h3{
         width: auto;
-        padding-top: 65px;
+        padding-top: 30px;
         margin-top: -50px;
         font-size: 30px;
         }
@@ -18,6 +18,12 @@
         font-weight: normal;
         background-color: white;
         }
+        .anchor{
+          display: block;
+          height: 30px; /*same height as header*/
+          margin-top: -30px; /*same height as header*/
+          visibility: hidden;
+        }
 
     </style>
 {% endblock %}
@@ -26,22 +32,23 @@
 {% block content %}
 <h1 style="padding-top: 30px;">API Documentation</h1>
 
-<h3 id="introduction">Introduction</h3>
+<h2 id="introduction"><u>Introduction</u></h2>
 <p>You can use our free API to access NBA-related data.</p>
 
 <ul>
     <li>No email required.</li>
     <li>No API key required.</li>
     <li>Contains data from 1946-47 through 2018-2019 seasons.</li>
-    <li>All API parameters must be entered in correct format. If not, 404 Not Found.</li>
+    <li>All API parameters must be entered in correct format. If not, 404 Not Found returned.</li>
 </ul>
 
-<a href="#game_logs" style="color: blue;"><u>Game Logs</u></a>
+<a href="#section3" style="color: blue;"><u>Game Logs</u></a>
 <br>
-<a href="#box-scores" style="color: blue;"><u>Box Scores</u></a>
+<a href="#section2" style="color: blue;"><u>Box Scores</u></a>
 <br>
-<a href="#misc" style="color: blue; margin-bottom: 30px;"><u>Misc</u></a>
+<a href="#section1" style="color: blue;"><u>Misc</u></a>
 
+<span class="anchor" id="section3"></span>
 <h3 id="game_logs" style="margin-top: 0px;"><u>Game Logs</u></h3>
 <p style="font-size: 20px; padding-bottom: 0px; background-color: lightgrey;"><strong>League Game Log</strong></p>
 <p style="padding-bottom: 5px;">This endpoint retrieves team box scores from the entire league within a specific season, season mode, and date range.</p>
@@ -150,7 +157,8 @@
     </tbody>
 </table>
 
-<h3 id="box-scores" style = "margin-top: 20px;"><u>Box Scores</u></h3>
+<span class="anchor" id="section2"></span>
+<h3 id="box-scores" style = "margin-top: 0px;"><u>Box Scores</u></h3>
 <p style="font-size: 20px; padding-bottom: 0px; background-color: lightgrey;"><strong>Player Box</strong></p>
 <p style="padding-bottom: 5px;">This endpoint retrieves entire box score of all players for a specific game.</p>
 <p><strong>HTTP Request:</strong></p>
@@ -196,7 +204,8 @@
     </tbody>
 </table>
 
-<h3 id="misc" style="margin-top: 20px;"><u>Misc</u></h3>
+<span class="anchor" id="section1"></span>
+<h3 id="misc" style="margin-top: 0px;"><u>Misc</u></h3>
 <p style="font-size: 20px; padding-bottom: 0px; background-color: lightgrey;"><strong>Player Info</strong></p>
 <p style="padding-bottom: 5px;">This endpoint retrieves player data for a specific player.</p>
 <p><strong>HTTP Request:</strong></p>

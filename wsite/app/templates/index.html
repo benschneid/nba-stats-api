@@ -1,2 +1,53 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {{super()}}
+        <style xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+        body{
+        margin-left: 30px;
+        width: 66%;
+        margin-left: 17%;
+        margin-bottom: 30px;
+        }
+        h1{
+        text-align: center;
+        padding-bottom: 10px;
+        }
+        p{
+        font-size: 20px;
+        font-family: Trebuchet MS;
+        color: black;
+        }
+        li{
+        font-family: Trebuchet MS;
+        color: black;
+        font-size: 16px;
+        }
+        iframe{
+        text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h1 style="padding-top: 30px;">Welcome to Barkley Analytics</h1>
+<p style="font-family: Trebuchet MS; background-color: lightgrey;">About our features:</p>
+<ul>
+<li>The <strong>"Play Index"</strong> is the name we use to refer to our collection of top-notch research tools.
+    In here you can use:</li>
+<ul>
+    <li><strong>Player Game Finder</strong>: Find sortable <strong>player</strong> stats for games matching your criteria.</li>
+    <li><strong>Team Game Finder</strong>: Find sortable <strong>team</strong> stats for games matching your criteria.</li>
+    <li><strong>Head2Head Finder</strong>: Select any two players and see their stats in games they have played against each other.</li>
+</ul>
+<li style="padding-top: 5px;">Use the <strong>API</strong> to fuel your own automated stat collection.</li>
+<li style="padding-top: 5px;">Use <strong>Player Search</strong> to find career stats of your favorite players.</li>
+</ul>
+
+<p style="padding-top: 10px; text-align: center;">Watch the below video to see the site name's inspiration</p>
+<iframe style="display: block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/2asGeItzGWM" frameborder="0" allow="accelerometer;
+ autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<a href="#" class="fa fa-linkedin"></a>
+<a href="#" class="fa fa-github"></a>
+{% endblock %}
+
