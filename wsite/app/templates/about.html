@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{super()}}
+<style xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+        body{
+        margin-left: 30px;
+        width: 60%;
+        margin-left: 20%;
+        margin-bottom: 30px;
+        }
+        h1{
+        text-align: center;
+        }
+        h2{
+        font-size: 30px;
+        font-weight: strong;
+        font-family: Trebuchet MS;
+        }
+        p{
+        font-size: 20px;
+        font-family: Trebuchet MS;
+        color: black;
+        }
+        .pipe{
+        width: 100%;
+        height: 313.5px;
+        }
+        .airflow{
+        width: 100%;
+        height: 320.5px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h1 style="padding-top: 30px;">About the project</h1>
+
+<h2 style="padding-top: 30px; font-family: Trebuchet MS;"><strong>Objective</strong></h2>
+<p style="font-family: Trebuchet MS;">The primary objective of this project was to gain a deeper understanding of
+    backend/frontend engineering concepts and tools. This was achieved through building an
+    ETL data pipeline. The frontend was added to let the user easily perform pertinent queries.
+    An API is also exposed to give the user more flexibility to collect their own stats.</p>
+
+<h2 style="padding-top: 30px; font-family: Trebuchet MS;"><strong>Technical Overview</strong></h2>
+<img class="pipe" src="/static/favicon/my_pipeline.png" style = "padding-top: 20px;">
+<p style="color:gray; font-size: 15px; text-align: center;"><i>Pipeline visualized</i></p>
+<p style="font-family: Trebuchet MS;">Steps in the data pipeline:</p>
+<p>1. Python scripts retrieve data from NBA.com via open-source <a href="https://github.com/swar/nba_api">NBA API</a>
+    and stores the data in a relational Postgres database.</p>
+<p>2. SQL scripts (through SQLAlchemy) transform the data into a more organized structure for querying,
+    and then load the data into a data warehouse.</p>
+<p>3. A Flask app is used to retrieve the queried data from the warehouse and then visualize it using Bootstrap and CSS.</p>
+
+<p>
+    At a high level, these steps are what most data pipelines boil down to:
+    <strong>E</strong>xtract relational data, <strong>T</strong>ransform the data for reporting,
+    <strong>L</strong>oad the data into a warehouse.
+    One tool that allows engineers to manage their data pipelines is:
+</p>
+
+<h2 style="padding-top: 30px; font-family: Trebuchet MS;"><strong>Airflow</strong></h2>
+<p style="font-family: Trebuchet MS;"><a href="https://airflow.apache.org/">Airflow</a> was developed by Airbnb to manage their own internal
+    pipelines. The library is written in Python and the Apache Software Foundation is
+    incubating it so the code will be well-maintained.
+    Setup is minimal and intuitive which lessens the learning curve.</p>
+<p>Take a look at this screenshot of the Airflow UI:</p>
+<img class="airflow" src="/static/favicon/dag_pic.png" style = "padding-top: 20px;">
+<p style="color:gray; font-size: 15px; text-align: center;"><i>Airflow UI displaying the data pipeline</i></p>
+
+<p>My data pipeline (A.K.A. DAG) runs daily and is called “nba_api_to_postgres”.
+    There are separate steps as
+    indicated by the circles to take that day's NBA box score
+    data and load it into the database appropriately given the schema structure.
+    I was able to succesfully backfill the data all the way back to 1946 in ~24 hours!</p>
+
+<h2 style="padding-top: 30px; font-family: Trebuchet MS;"><strong>Docker</strong></h2>
+<img class="docker" src="/static/favicon/docker.png" style = "padding-top: 20px;">
+<p style="color:gray; font-size: 15px; text-align: center;"><i>The docker containers running locally.</i></p>
+<p style="font-family: Trebuchet MS;">I used <a href="https://github.com/puckel/docker-airflow">docker-airflow</a> to
+create two containers to run the Airflow webserver and Airflow scheduler, respectively. When using the Airflow scheduler,
+I had to limit myself to 15 consecutive DAG runs or else I was getting blocked by NBA.com for too many requests.</p>
+
+<h2 style="padding-top: 30px; font-family: Trebuchet MS;"><strong>Flask</strong></h2>
+<p style="font-family: Trebuchet MS;">Flask is what brings it all together. The user gets presented some fun features
+to visualize historical basketball stats!</p>
+
+<h2 style="padding-top: 30px; font-family: Trebuchet MS;"><strong>Conclusion</strong></h2>
+<p>I was happy to build a robust enough data pipeline and front-end that is close to what one sees
+    on monetized websites. With some more capital, one could build something similar to
+    <a href="https://www.basketball-reference.com/">basketball reference</a> in a reasonable timeframe.
+</p>
+<p>If you read this far, I hope you learned something new or were inspired to build something yourself.
+    Feel free to reach out if you have any questions, and I will respond when I can. Thanks for reading!
+</p>
+{% endblock %}

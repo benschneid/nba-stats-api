@@ -10,6 +10,11 @@ def index():
     return render_template('index.html', title='Home')
 
 
+@bp.route('/about', methods=['GET'])
+def about():
+    return render_template('about.html', title='About')
+
+
 @bp.route('/players/<int:player_id>')
 def player_page(player_id):
     player_info = list(db.session.query(Player.__table__).filter(Player.PLAYER_ID == player_id).first_or_404())
@@ -31,7 +36,8 @@ def player_page(player_id):
             for row in table:
                 for i in [5, 6, 8, 9] + [i for i in range(11, len(headers))] + [4]:
                     if n == 0:
-                        row[i] = row[i] / row[2]
+                        if row[2] != 0:
+                            row[i] = row[i] / row[2]
                     else:
                         if row[4] != 0:
                             row[i] = row[i] / row[4] * 36 * 60
