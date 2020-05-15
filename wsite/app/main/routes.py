@@ -5,7 +5,7 @@ from app.models import *
 import copy
 
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET'])
 def index():
     return render_template('index.html', title='Home')
 

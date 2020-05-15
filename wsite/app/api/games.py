@@ -6,6 +6,12 @@ from app.api import bp
 from sqlalchemy.orm import aliased
 from datetime import datetime
 from sqlalchemy.sql import and_
+from flask import render_template
+
+
+@bp.route('/', methods=['GET'])
+def api_home():
+    return render_template('api.html', title="API")
 
 
 @bp.route('/player_box/<game_id>', methods=['GET'])

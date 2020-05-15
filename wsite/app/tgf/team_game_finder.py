@@ -23,7 +23,7 @@ def finder():
     Oppt_Box = aliased(TeamBox)
     dfs = '%Y-%m-%d %H:%M:%S'
     query_args = {}
-    for arg in ["mode", "Seasons0", "Seasons1", "Overtime", "Game_Month", "Team", "Opponent", "Game_Result",
+    for arg in ["mode", "Seasons0", "Seasons1", "Overtime", "Game_Type", "Game_Month", "Team", "Opponent", "Game_Result",
                 "Game_Location", "stats0", "stats1", "stats2", "stats3", "operators0", "operators1",
                 "operators2", "operators3", "input0", "input1", "input2", "input3", "order", "page"]:
         query_args[arg] = request.args.get(arg)

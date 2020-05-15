@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{super()}}
+    <style>
+        body{
+        margin-left: 30px;
+        }
+        h3{
+        width: auto;
+        padding-top: 65px;
+        margin-top: -50px;
+        font-size: 30px;
+        }
+        th{
+        padding: 7px;
+        border: 1px solid;
+        font-weight: normal;
+        background-color: white;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<h1 style="padding-top: 30px;">API Documentation</h1>
+
+<h3 id="introduction">Introduction</h3>
+<p>You can use our free API to access NBA-related data.</p>
+
+<ul>
+    <li>No email required.</li>
+    <li>No API key required.</li>
+    <li>Contains data from 1946-47 through 2018-2019 seasons.</li>
+    <li>All API parameters must be entered in correct format. If not, 404 Not Found.</li>
+</ul>
+
+<a href="#game_logs" style="color: blue;"><u>Game Logs</u></a>
+<br>
+<a href="#box-scores" style="color: blue;"><u>Box Scores</u></a>
+<br>
+<a href="#misc" style="color: blue; margin-bottom: 30px;"><u>Misc</u></a>
+
+<h3 id="game_logs" style="margin-top: 0px;"><u>Game Logs</u></h3>
+<p style="font-size: 20px; padding-bottom: 0px;"><strong>League Game Log</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves team box scores from the entire league within a specific season, season mode, and date range.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/league_game_log/[season]/[int:playoffs]/[date_from]/[date_to]</code></p>
+<p><strong>Query parameters:</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Season</th>
+        <th>1946-47, ..., 2018-19</th>
+        <th>The season to collect game logs on.</th>
+    </tr>
+    <tr>
+        <th>Playoffs</th>
+        <th>0 or 1</th>
+        <th>If 0, collect regular season logs. If 1, collect playoff logs.</th>
+    </tr>
+    <tr>
+        <th>Date from/to</th>
+        <th>MM-DD-YYYY</th>
+        <th>Date range within season to collect logs for.</th>
+    </tr>
+    </tbody>
+</table>
+
+
+<p style="font-size: 20px; padding-top: 40px;"><strong>Player Game Log</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves box score data from a single player within a specific season, season mode, and date range.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/player_game_log/[player]/[season]/[int:playoffs]/[date_from]/[date_to]</code></p>
+<p><strong>Query parameters:</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Player ID</th>
+        <th>Integer</th>
+        <th>The id of the player to collect game logs on.</th>
+    </tr>
+    <tr>
+        <th>Season</th>
+        <th>1946-47, ..., 2018-19</th>
+        <th>The season to collect game logs on.</th>
+    </tr>
+    <tr>
+        <th>Playoffs</th>
+        <th>0 or 1</th>
+        <th>If 0, collect regular season logs. If 1, collect playoff logs.</th>
+    </tr>
+    <tr>
+        <th>Date from/to</th>
+        <th>MM-DD-YYYY</th>
+        <th>Date range within season to collect logs for.</th>
+    </tr>
+    </tbody>
+</table>
+
+<p style="font-size: 20px; padding-top: 40px;"><strong>Team Game Log</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves box score data from a single team within a specific season, season mode, and date range.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/player_game_log/[team]/[season]/[int:playoffs]/[date_from]/[date_to]</code></p>
+<p><strong>Query parameters:</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Team ID</th>
+        <th>Integer</th>
+        <th>The id of the team to collect game logs on.</th>
+    </tr>
+    <tr>
+        <th>Season</th>
+        <th>1946-47, ..., 2018-19</th>
+        <th>The season to collect game logs on.</th>
+    </tr>
+    <tr>
+        <th>Playoffs</th>
+        <th>0 or 1</th>
+        <th>If 0, collect regular season logs. If 1, collect playoff logs.</th>
+    </tr>
+    <tr>
+        <th>Date from/to</th>
+        <th>MM-DD-YYYY</th>
+        <th>Date range within season to collect logs for.</th>
+    </tr>
+    </tbody>
+</table>
+
+<h3 id="box-scores" style = "margin-top: 20px;"><u>Box Scores</u></h3>
+<p style="font-size: 20px; padding-bottom: 0px;"><strong>Player Box</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves entire box score of all players for a specific game.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/player_box/[game_id]'</code></p>
+<p><strong>Query parameters:</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Game ID</th>
+        <th>Integer</th>
+        <th>The game to get data for.</th>
+    </tr>
+    </tbody>
+</table>
+
+
+<p style="font-size: 20px; padding-top: 40px;"><strong>Team Box</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves box score data from both teams for a specific game.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/team_box/[game_id]</code></p>
+<p><strong>Query parameters:</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Game ID</th>
+        <th>Integer</th>
+        <th>The game to get data for.</th>
+    </tr>
+    </tbody>
+</table>
+
+<h3 id="misc" style="margin-top: 20px;"><u>Misc</u></h3>
+<p style="font-size: 20px; padding-bottom: 0px;"><strong>Player Info</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves player data for a specific player.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/players/[player_id]</code></p>
+<p><strong>Query parameters:</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Player ID</th>
+        <th>Integer</th>
+        <th>The player to get data for.</th>
+    </tr>
+    </tbody>
+</table>
+
+
+<p style="font-size: 20px; padding-top: 40px;"><strong>Season Standings</strong></p>
+<p style="padding-bottom: 5px;">This endpoint retrieves league-wide standings for a specific season.</p>
+<p><strong>HTTP Request:</strong></p>
+<p style="padding-bottom: 10px;"><code>GET https://www.barkleyanalytics.com/api/standings/[season]</code></p>
+<p><strong>Query parameters:</strong></p>
+<table style="margin-bottom: 30px;">
+    <thead>
+    <tr>
+        <th><strong>Parameter</strong></th>
+        <th><strong>Format</strong></th>
+        <th><strong>Description</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Season</th>
+        <th>"1946-47", ..., "2018-19"</th>
+        <th>The season to get data for.</th>
+    </tr>
+    </tbody>
+</table>
+
+{% endblock %}

@@ -33,6 +33,7 @@ function generate_table(data, headers, order) {
       var cell = document.createElement("td");
       cell.style.padding = "2px";
       cell.style.textAlign = "center";
+      cell.style.backgroundColor = "white";
       if(order){
         if(j == order){
             cell.style.backgroundColor = "orange";
